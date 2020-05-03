@@ -10,6 +10,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Collections;
 
 /**
  * Created by LaunchCode
@@ -65,24 +67,116 @@ public class JobData {
      * @param value Value of teh field to search for
      * @return List of all jobs matching the criteria
      */
+    // create a public static method called findByColumnAndValue that takes string column and string value and returns
+    // and ArrayList of hashmaps --> going to be the parameter that gets passed thru printJobs
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
 
         // load data, if not already loaded
         loadData();
-
+// created new empty arrayList of hashmaps called jobs
+// where we will put our jobs that match the search criteria
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
 
+        // looping thru every row of an arraylist called allJobs
+// each row is a single job, data type is hashmap
         for (HashMap<String, String> row : allJobs) {
-
+// creating a variable 'aValue
+// stores the value of the cell in the column you're searching for in findByColumnAndValue
             String aValue = row.get(column);
+            aValue = aValue.toUpperCase();
 
-            if (aValue.contains(value)) {
+
+// If the value of a cell matches the value we entered as a parameter for findByColumnAndValue
+ //  add it to our arrayList 'jobs'
+
+            if (aValue.contains(value.toUpperCase())) {
                 jobs.add(row);
             }
         }
-
+// returns the arrayList of matching jobs
+// going to be the input parameter for printJobs()
         return jobs;
     }
+
+    //****************************************************************************************************
+
+
+    // findByValue is a function that takes whatever we want to search for
+    // returns a list of jobs that meet that criteria
+    public static ArrayList<HashMap<String, String>> findByValue(String searchTerm) {
+
+        // loads the dataset of all possible jobs
+        loadData();
+// creates new ArrayList called matchingJobs where we put all the jobs that match what we're searching for
+        ArrayList<HashMap<String, String>> matchingJobs = new ArrayList<>();
+
+        // for loop that loops thru every job in the data set that contains all of the possible jobs
+        for (HashMap<String, String> job : allJobs) {
+// creates an ArrayList 'cellContents'
+// where we store all the contents of each job so we can search just this arrayList
+            ArrayList<String>  cellContents = new ArrayList<>();
+// Loops thru every cell of each job (key/value pairs; key = column value = contents of cell)
+            for (Map.Entry<String, String> cell : job.entrySet()) {
+// adds values of every cell to the arraylist 'cellContents' we created on line 114
+                cellContents.add(cell.getValue());
+            }
+
+// loops thru all of the values of cellContents, if it matches our search term we add the job to our matchingJobs array
+            for (String values: cellContents) {
+                values = values.toUpperCase();
+                if (values.contains(searchTerm.toUpperCase())) {
+                    matchingJobs.add(job);
+                    break;
+            }
+            }
+        }
+// returns the arrayList of matching jobs
+// going to be the input parameter for printJobs()
+        return matchingJobs;
+    }
+
+// TODO: a paragraph about how the function works
+    //case insensitive
+    // findByValue is a function that takes a search term (searchTerm) as its parameter and then searches a data set
+    // for matching criteria. It creates a new ArrayList called matchingJobs that takes HashMaps of all the job
+    // listings that fit the criteria. Every HashMap has a Name, Employer, Location, Position Type, and Core
+    // Competency. It loops thru every entry in the data set that contains all possible jobs and then creates an Array
+    //List called 'cellContents' where it stores all of the contents of every job HashMap. It then loops thru every
+    // cell (Name, Employer, Location, Position Type, Core Competency) looking for the matching value (contents of
+    // the individual cells), adding these values to cellContents ArrayList. Then it loops thru all of these values
+    // looking for the search term the user entered. If the searchTerm is present, the entire HashMap where
+    // the searchTerm is present gets added to an arraylist called
+    // matchingJobs and returned.
+
+    //1. Which methods are called when searching?
+    // A: findByValue and findByColumnAndValue
+    // 2. How is the user’s search string compared against the values of fields of the job HashMap objects?
+    // A: [findByValue] for (String values: cellContents) {
+    //                if (values.contains(searchTerm)) {
+    //                    matchingJobs.add(job);
+    //                    break;
+    //            }
+    // [findByColumnAndValue]  if (aValue.contains(value)) {
+    //                jobs.add(row);
+    //            }
+    // 3. How can you make this comparison in a way that effectively ignores the case of the strings?
+    // A: Make findByValue's searchTerm AND value toUpperCase()
+    // A: Make findByColumnAndValue's aValue AND value toUpperCase()?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Read in data from a CSV file and store it in a list

@@ -3,6 +3,7 @@ package org.launchcode.techjobs.console;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Map;
 
 /**
  * Created by LaunchCode
@@ -11,7 +12,7 @@ public class TechJobs {
 
     private static Scanner in = new Scanner(System.in);
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
 
         // Initialize our field map with key/name pairs
         HashMap<String, String> columnChoices = new HashMap<>();
@@ -61,7 +62,7 @@ public class TechJobs {
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    printJobs(JobData.findByValue(searchTerm));
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -103,14 +104,32 @@ public class TechJobs {
                 validChoice = true;
             }
 
-        } while(!validChoice);
+        } while (!validChoice);
 
         return choiceKeys[choiceIdx];
     }
 
     // Print a list of jobs
+    // create a private static method that returns nothing called printJobs
+    // method takes 1 parameter, an ArrayList of hashmaps called someJobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
+        if (someJobs.size() > 0) {
+            //for loop that iterates thru arraylist "someJobs"
+            //each iteration is a hashmap called "job"
+            for (HashMap<String, String> job : someJobs) {
+                System.out.println("*****");
+                //for loop that iterates thru hashmap called job
+                //each iteration is a key/value pair called "pair"
+                for (Map.Entry<String, String> pair : job.entrySet()) {
+                   //print key/value pair
+                    System.out.println(pair.getKey() + ": " + pair.getValue());
+                }
+            }
+        } else {
+            System.out.println("No jobs matching criteria :(");
+        }
 
-        System.out.println("printJobs is not implemented yet");
+
     }
+
 }
